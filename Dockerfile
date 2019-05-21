@@ -17,13 +17,13 @@ ENV API_SECRET=""
 
 ################
 
-RUN apk update && apk add bash bc coreutils curl git jq tzdata && \
+RUN apk update && apk add bash bc coreutils curl git jq tzdata sudo && \
       mkdir -p /openaps/settings /openaps/autotune && \
       touch /etc/localtime && \
       chown -Rh node:node /openaps/ /etc/localtime && \
       git clone --branch v0.6.3 https://github.com/openaps/oref0
 WORKDIR /oref0
-RUN npm install -g
+RUN npm run global-install
 
 COPY entrypoint.sh /entrypoint.sh
 USER node
