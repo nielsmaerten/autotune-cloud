@@ -1,0 +1,18 @@
+{
+  "name": "autotune-docker-cloud",
+  "private": true,
+  "description": "Run OpenAPS Autotune in a docker container",
+  "main": "index.js",
+  "scripts": {
+    "prettier": "prettier"
+  },
+  "author": "Niels Maerten",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.0",
+    "express-fileupload": "^1.1.4"
+  },
+  "devDependencies": {
+    "prettier": "1.17.1"
+  }
+}
