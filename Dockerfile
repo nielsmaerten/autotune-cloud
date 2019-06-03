@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:12.3.1-alpine
 ARG PORT=3000
 ENV PORT=$PORT
 
@@ -16,6 +16,5 @@ COPY api/ /api/
 WORKDIR /api
 RUN npm install
 
-COPY entrypoint.sh /entrypoint.sh
 USER node
 CMD ["node", "index.js"]
