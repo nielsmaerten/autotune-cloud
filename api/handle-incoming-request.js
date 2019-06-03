@@ -1,7 +1,8 @@
 const uuid = require("./uuid"),
   fs = require("fs"),
   getAutotunePrefs = require("./get-autotune-prefs"),
-  spawn = require("child_process").spawn;
+  spawn = require("child_process").spawn,
+  nsProfileConvert = require("nightscout-profile-convert");
 
 module.exports = async (req, res) => {
   // Create a working directory for this request
@@ -11,9 +12,38 @@ module.exports = async (req, res) => {
   fs.mkdirSync(settingsDirectory, { recursive: true });
   console.log("Initializing working directory: ", workingDirectory);
 
-  // Move the profile to working dir
   const profilePath = `${settingsDirectory}/profile.json`;
-  await req.files.profile.mv(profilePath);
+  const profileName = req.query.profileName || "autotune";
+  try {
+    // Fetch profile from Nightscout
+    let nsProfile = await nsProfileConvert.fetchProfile(
+      req.query.nsHost,
+      profileName
+    );
+
+    // Convert profile to oref0-autotune format
+    let profile = nsProfileConvert.convertProfile(
+      nsProfile,
+      req.query.min5mCarbimpact
+    );
+
+    // Save the profile to the working directory
+    fs.writeFileSync(profilePath, JSON.stringify(profile));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(
+      `
+      Failed to get the profile from Nightscout.
+      nsHost: ${req.query.nsHost}
+      min5mCarbimpact: ${req.query.min5mCarbimpact}
+      profileName: ${profileName} 
+
+      You can set these parameters through the querystring.
+      Error details: ${error}
+      `
+    );
+    return;
+  }
 
   // Copy profile.json -> pumpprofile.json and autotune.json
   fs.copyFileSync(profilePath, `${settingsDirectory}/pumpprofile.json`);

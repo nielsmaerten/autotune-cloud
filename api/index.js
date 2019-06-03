@@ -9,7 +9,7 @@ const port = process.env.PORT,
 // Configure Express
 app.use(fileUpload({ safeFileNames: true }));
 
-app.post("/", require("./handle-incoming-request"));
+app.get("/", require("./handle-incoming-request"));
 
 // Start server
 app.listen(port, () => {
