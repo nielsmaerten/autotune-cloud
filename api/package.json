@@ -1,12 +1,15 @@
 {
-  "name": "autotune-docker-cloud",
+  "name": "autotune-cloud",
   "private": true,
-  "description": "Run OpenAPS Autotune in a docker container",
+  "description": "An http service for oref0-autotune in a docker container",
   "main": "index.js",
   "scripts": {
     "prettier": "prettier"
   },
   "author": "Niels Maerten",
+  "bugs": {
+    "url": "https://github.com/nielsmaerten/autotune-docker/issues"
+  },
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.0",
