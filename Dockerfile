@@ -1,6 +1,8 @@
 FROM node:12.3.1-alpine
 ARG PORT=3000
 ENV PORT=$PORT
+ARG TIMEOUT=600
+ENV TIMEOUT=$TIMEOUT
 
 RUN apk update && \
     apk add bash bc coreutils curl git jq tzdata sudo && \
