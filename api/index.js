@@ -16,4 +16,6 @@ app
   .listen(port, () => {
     console.log("Listening on port: ", port);
   })
-  .setTimeout(0);
+  .setTimeout(1000 * process.env.TIMEOUT, () =>
+    console.error("Request timed out.")
+  );
