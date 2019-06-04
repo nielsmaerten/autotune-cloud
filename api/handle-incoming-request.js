@@ -75,7 +75,7 @@ module.exports = async (req, res) => {
         console.error(error);
         res.status(500).send(error.toString());
       });
-      child.stdout.on("data", _ => console.log(_.toString()));
+      // child.stdout.on("data", _ => console.log(_.toString()));
       child.stderr.on("data", _ => console.warn(_.toString()));
       child.on("close", code => {
         // After exiting, inspect exit code
