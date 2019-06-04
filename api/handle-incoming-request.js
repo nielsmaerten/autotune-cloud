@@ -31,17 +31,18 @@ module.exports = async (req, res) => {
     fs.writeFileSync(profilePath, JSON.stringify(profile));
   } catch (error) {
     console.error(error);
-    res.status(500).send(
-      `
-      Failed to get the profile from Nightscout.
-      nsHost: ${req.query.nsHost}
-      min5mCarbimpact: ${req.query.min5mCarbimpact}
-      profileName: ${profileName} 
-
-      You can set these parameters through the querystring.
-      Error details: ${error}
-      `
-    );
+    res.status(500).send({
+      error: {
+        msg: "Failed to load profile from Nightscout",
+        details: error
+      },
+      parameters: {
+        nsHost: req.query.nsHost,
+        min5mCarbimpact: req.query.min5mCarbimpact,
+        profileName: profileName,
+        usingDefaultProfile: req.query.profileName === undefined
+      }
+    });
     return;
   }
 
@@ -70,9 +71,12 @@ module.exports = async (req, res) => {
       // Start the process
       const child = spawn("oref0-autotune", autotunePrefs);
 
-      // child.on("error", _ => console.log(_.toString()))
-      child.stdout.on("data", _ => console.log(_.toString()));
-      child.stderr.on("data", _ => console.log(_.toString()));
+      child.on("error", error => {
+        console.error(error);
+        res.status(500).send(error.toString());
+      });
+      // child.stdout.on("data", _ => console.log(_.toString()));
+      child.stderr.on("data", _ => console.warn(_.toString()));
       child.on("close", code => {
         // After exiting, inspect exit code
         if (code === 0) {
@@ -90,7 +94,6 @@ module.exports = async (req, res) => {
     });
   } catch (error) {
     // User set some bad parameters
-    res.status(400);
-    res.send(error);
+    res.status(400).send(error);
   }
 };
