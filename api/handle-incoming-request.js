@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
   console.log("Initializing working directory: ", workingDirectory);
 
   const profilePath = `${settingsDirectory}/profile.json`;
-  const profileName = req.query.profileName || "autotune";
+  const profileName = req.query.profileName;
   try {
     // Fetch profile from Nightscout
     let nsProfile = await nsProfileConvert.fetchProfile(
@@ -37,9 +37,9 @@ module.exports = async (req, res) => {
         details: error
       },
       parameters: {
-        nsHost: req.query.nsHost,
-        min5mCarbimpact: req.query.min5mCarbimpact,
-        profileName: profileName,
+        nsHost: req.query.nsHost || "REQUIRED",
+        min5mCarbimpact: req.query.min5mCarbimpact || "REQUIRED",
+        profileName: profileName || "Not specified",
         usingDefaultProfile: req.query.profileName === undefined
       }
     });
