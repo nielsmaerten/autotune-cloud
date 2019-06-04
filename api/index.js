@@ -12,10 +12,11 @@ app.use(fileUpload({ safeFileNames: true }));
 app.get("/", require("./handle-incoming-request"));
 
 // Start server
+const TIMEOUT = 1000 * process.env.TIMEOUT;
 app
   .listen(port, () => {
-    console.log("Listening on port: ", port);
+    console.log(`Listening on port: ${port}; Timeout: ${TIMEOUT} ms.`);
   })
-  .setTimeout(1000 * process.env.TIMEOUT, () =>
+  .setTimeout(TIMEOUT, () =>
     console.error("Request timed out.")
   );
