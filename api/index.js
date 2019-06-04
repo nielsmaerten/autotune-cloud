@@ -12,6 +12,8 @@ app.use(fileUpload({ safeFileNames: true }));
 app.get("/", require("./handle-incoming-request"));
 
 // Start server
-app.listen(port, () => {
-  console.log("Listening on port: ", port);
-});
+app
+  .listen(port, () => {
+    console.log("Listening on port: ", port);
+  })
+  .setTimeout(0);
