@@ -15,7 +15,7 @@ app.get("/", require("./handle-incoming-request"));
 const TIMEOUT = 1000 * process.env.TIMEOUT;
 app
   .listen(port, () => {
-    console.log(`Listening on port: ${port}; Timeout: ${TIMEOUT} ms.`);
+    console.log(`Spawned container with timeout of ${TIMEOUT / 1000} seconds.`);
   })
   .setTimeout(TIMEOUT, () =>
     console.error("Request timed out.")
