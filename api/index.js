@@ -17,6 +17,4 @@ app
   .listen(port, () => {
     console.log(`Spawned container with timeout of ${TIMEOUT / 1000} seconds.`);
   })
-  .setTimeout(TIMEOUT, () =>
-    console.error("Request timed out.")
-  );
+  .setTimeout(TIMEOUT, () => console.error("Request timed out."));

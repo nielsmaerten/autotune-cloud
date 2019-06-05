@@ -2,7 +2,8 @@ const uuid = require("./uuid"),
   fs = require("fs"),
   getAutotunePrefs = require("./get-autotune-prefs"),
   spawn = require("child_process").spawn,
-  nsProfileConvert = require("nightscout-profile-convert");
+  nsProfileConvert = require("nightscout-profile-convert"),
+  timezones = require("tz-ids");
 
 module.exports = async (req, res) => {
   // Create a working directory for this request
@@ -52,13 +53,14 @@ module.exports = async (req, res) => {
 
   // Get timezone from query with fallback to Nightscout Profile
   const timezone = req.query.timezone || require(profilePath).timezone;
-  // const zoneinfo = "/usr/share/zoneinfo/" + timezone;
-  if (!timezone) {
-    res.status(400).send("Timezone must be provided in query string or NS profile.");
+  if (!timezone || !timezones.includes(timezone)) {
+    res
+      .status(400)
+      .send(
+        `No valid timezone found. Provide a timezone in the querystring, or the Nightscout profile.`
+      );
     return;
   }
-  //fs.copyFileSync(zoneinfo, "/etc/localtime");
-  //console.log("Setting timezone to: ", timezone);
 
   // Set autotune parameters
   const autotunePrefs = getAutotunePrefs(req.query);
@@ -67,11 +69,11 @@ module.exports = async (req, res) => {
   // Invoke autotune
   await new Promise((resolve, reject) => {
     // Start the process
-    console.log("Setting timezone to:", timezone)
+    console.log("Setting timezone to:", timezone);
     console.log("Starting: ", "oref0-autotune", autotunePrefs.join(" "));
     const child = spawn("oref0-autotune", autotunePrefs, {
       env: {
-        "TZ": timezone
+        TZ: timezone
       },
       detached: true
     });
@@ -87,7 +89,7 @@ module.exports = async (req, res) => {
         gotErrors = true;
         console.warn("Autotune has encountered an error:", data.toString());
       }
-    }
+    };
     child.stdout.on("data", data => !gotOutput && processResp(data, "out"));
     child.stderr.on("data", data => !gotErrors && processResp(data, "err"));
 
@@ -109,13 +111,12 @@ module.exports = async (req, res) => {
     // After successful completion, send the recommendations back
     .then(recommends => {
       console.log("Completed successfully. Sending recommendations...");
-      res.sendFile(recommends)
+      res.sendFile(recommends);
     })
 
     // In case of failure, report exit code
     .catch(error => {
-      console.error(error.toString())
+      console.error(error.toString());
       res.status(500).send(error.toString());
-    })
-
+    });
 };
