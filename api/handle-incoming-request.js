@@ -67,14 +67,11 @@ module.exports = async (req, res) => {
     autotunePrefs.push(`--dir=${workingDirectory}`);
     console.log("Setting parameters to: ", autotunePrefs);
 
-    await new Promise(resolve => {
+    await new Promise((resolve, reject) => {
       // Start the process
       const child = spawn("oref0-autotune", autotunePrefs);
 
-      child.on("error", error => {
-        console.error(error);
-        res.status(500).send(error.toString());
-      });
+      child.on("error", reject);
       // child.stdout.on("data", _ => console.log(_.toString()));
       child.stderr.on("data", _ => console.warn(_.toString()));
       child.on("close", code => {
@@ -84,16 +81,14 @@ module.exports = async (req, res) => {
           const outFile = `${workingDirectory}/autotune/autotune_recommendations.log`;
           res.sendFile(outFile);
           console.log("All good. Request completed.");
+          resolve();
         } else {
-          // :(
-          res.status(500).send("Something crashed, sorry :(");
-          console.error("Failed running autotune.");
+          reject("Autotune failed with exit code: " + code);
         }
-        resolve();
       });
     });
   } catch (error) {
-    // User set some bad parameters
-    res.status(400).send(error);
+    console.error(error.toString())
+    res.status(500).send(error.toString());
   }
 };
