@@ -157,7 +157,7 @@ module.exports = async (req, res) => {
       // Complete request by sending recommendations back
       const recommendations = `${workingDirectory}/autotune/autotune_recommendations.log`;
       console.log("Completed successfully. Sending recommendations...");
-      res.sendFile(recommendations);
+      res.send(fs.readFileSync(recommendations).toString())
     })
 
     // In case of failure, report exit code

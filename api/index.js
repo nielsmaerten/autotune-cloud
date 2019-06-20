@@ -1,5 +1,6 @@
 // Dependency imports
 const express = require("express"),
+  cors = require('cors')
   fileUpload = require("express-fileupload");
 
 // Constants
@@ -8,6 +9,7 @@ const port = process.env.PORT,
 
 // Configure Express
 app.use(fileUpload({ safeFileNames: true }));
+app.use(cors);
 
 app.get("/", require("./handle-incoming-request"));
 
