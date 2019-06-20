@@ -9,7 +9,7 @@ const port = process.env.PORT,
 
 // Configure Express
 app.use(fileUpload({ safeFileNames: true }));
-app.use(cors);
+app.use(cors());
 
 app.get("/", require("./handle-incoming-request"));
 
