@@ -17,7 +17,7 @@ module.exports = query => {
     ? "--end-days-ago=" + parseInt(query.endDaysAgo)
     : null;
 
-  const categorizeUamAsBasal = query.categorizeUamAsBasal
+  const categorizeUamAsBasal = query.categorizeUamAsBasal === "true"
     ? "--categorize-uam-as-basal=true"
     : null;
 
