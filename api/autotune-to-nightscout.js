@@ -10,7 +10,7 @@ module.exports = (nsProfile, atProfile) => {
   atProfile.basalprofile.forEach(t => {
     newProfile.basal.push({
       time: t.start.substr(0, 5),
-      value: Math.round(t.rate * 100) / 100, // round to 2 decimals
+      value: Math.round(t.rate * 20) / 20, // round to nearest 0.05
       timeAsSeconds: t.minutes * 60
     });
   });

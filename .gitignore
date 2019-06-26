@@ -1,2 +1,4 @@
 node_modules/
 profile.json
+dist/
+.firebase/
