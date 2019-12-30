@@ -4,7 +4,7 @@
   "description": "An http service for oref0-autotune in a docker container",
   "main": "index.js",
   "scripts": {
-    "prettier": "prettier",
+    "prettier": "prettier **/*.js --print-width 100 --write ",
     "test": "mocha v2/test/*"
   },
   "author": "Niels Maerten",
