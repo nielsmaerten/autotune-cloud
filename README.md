@@ -1,41 +1,46 @@
 # Autotune Docker Cloud
+Runs oref0-autotune
+* in a docker container
+* as an HTTP webservice
+* for any nightscout site
+* and pushes the results back to nightscout
 
-### https://autotune.diabase.app <== Try it out :)
+## This is a Work in Progress...
 
-_Run oref-autotune as a dockerized HTTP service_
+## Purpose
+This is meant to replace the nightly run of Autotune
+that exists on OpenAPS rigs. Since this feature
+is not available in AndroidAPS.
 
-### Information
-
-This image is based on [autotune-docker](https://github.com/p5nbTgip0r/autotune-docker) and is designed to allow you to run `oref0-autotune` ([docs](http://openaps.readthedocs.io/en/latest/docs/Customize-Iterate/autotune.html)) without needing to have a full copy of oref0 installed to your system. 
-
-### Comparison to AutotuneWeb and autotune-docker
-**[Autotune Web](https://autotuneweb.azurewebsites.net/)** allows you to enter the URL to your Nightscout profile, and then runs autotune for you in the cloud.
-
-**[autotune-docker](https://autotuneweb.azurewebsites.net/)** lets you run autotune on your own machine, without having to install dependencies or go through the setup.
-
-**autotune-cloud (this project)** adds an HTTP server on top of autotune-docker, making it functionally equivalent to Autotune Web, but with better scalability and faster results. You can still run it yourself without too much setup, or in the cloud on a Kubernetes cluster.
-
-
-### Starting the http service
-
-Go into the directory that includes `docker-compose.yaml` and run  
-```ssh
-docker-compose up --build
+Making an HTTP request like this one:
+```
+http://127.0.0.1:3000/api/v2/run-autotune?nsSite=[NS-SITE]&maxDecimals=2&dryRun=0&nsSecret=[NS-SECRET]
 ```
 
-### cURL command
-To run oref0-autotune on your own Nightscout site, send this POST request to the server:
-```curl
-curl -X POST \
-  'http://localhost:3000?nsHost=https://my.ns.site&startDate=2019-05-25' \
-  -H 'Content-Type: application/x-www-form-urlencoded' \
-  -H 'Host: localhost:3000' \
-  -F profile=@/path/to/your/profile.json
-```
-The following query parameters are available:
-* ``nsHost``: the url to your nightscout site
-* ``startDate``: default=null
-* ``endDate``: default=null
-* ``startDaysAgo``: default=1
-* ``endDaysAgo``: default=null
-* ``categorizeUamAsBasal``: default=false
+Replace [NS-SITE] with the URL of your own Nightscout site. (eg https://my-ns.herokuapp.com) and [NS-SECRET] with your API secret
+
+This will: 
+* Fetch your current profile from your Nightscout site  
+* Run Autotune on your data of the past day
+* Update the profile on your site with the results
+
+## Requirements
+You need to have 2 profiles in your Nightscout:
+* a profile called "Autotune", which should be the one you're using on your rig. This one will be updated automatically
+* a profile called "Backup Profile". Autotune will not deviate further than 20% from this profile, and it can be used as a fallback in case anything goed wrong.
+
+## Options
+All of these can be passed using the querystring
+* `profileNames[autotune]`: Name of the profile to be tuned and auto-updated. Default: `Autotune`
+* `profileNames[backup]`: Name of your backup profile. Default: `Backup Profile`
+* `min5mCarbImpact`: Default: `8`
+* `categorizeUamAsBasal`: Default: `false`
+* `dryRun`: Default: `true` 
+
+## Next steps...
+To use this service, you still need
+* a cron job that calls it every night
+* an automation task in AndroidAPS to switch your profile after it's been updated
+
+These functions will eventually be implemented in this project natively.
+  
