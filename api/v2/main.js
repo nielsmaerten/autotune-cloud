@@ -7,7 +7,7 @@ async function handleRequest(/** @type Express.Request */ req, /** @type Express
   const settings = utils.getSettings(req);
 
   // Get latest NS reading, we only continue if the rig is online
-  const isRigOnline = await utils.isRigOnline(settings);
+  const isRigOnline = await utils.isRigOnline(settings, 15);
   if (!isRigOnline) {
     throw new Error(`
             ERROR: Your rig needs to be online.

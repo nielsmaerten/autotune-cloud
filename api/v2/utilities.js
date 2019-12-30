@@ -1,5 +1,6 @@
 const merge = require("lodash.merge");
 const constants = require("./constants");
+const axios = require("axios").default;
 
 /**
  * Merges the default settings with the ones
@@ -16,13 +17,19 @@ function getSettings(request) {
 
 /**
  * Checks if a rig is online by checking the NS site.
- * If the latest reading is less than 15 minutes old,
+ * If the latest reading is less than n minutes old,
  * the rig is considered online.
  */
-function isRigOnline(settings) {
-  // TODO
-  console.error("WARNING: Skipping isRigOnline check. TODO: Implement this.");
-  return true;
+async function isRigOnline(settings, minimumOnline) {
+  let res = await axios.get(`${settings.nsSite}/api/v1/entries/current.json`);
+
+  let lastEntry = res.data[0];
+  let lastEntryDate = new Date(lastEntry.dateString || lastEntry.date);
+  let now = new Date();
+  let cutoff = 1000 * 60 * minimumOnline; // minutes to milliseconds
+
+  let lastEntryPostCutoff = (now.getTime() - cutoff < lastEntryDate.getTime());
+  return lastEntryPostCutoff;
 }
 
 module.exports = {
