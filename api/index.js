@@ -12,6 +12,7 @@ app.use(fileUpload({ safeFileNames: true }));
 app.use(cors());
 
 app.get("/", require("./handle-incoming-request"));
+app.get("/api/v2/run-autotune", require("./v2/main"));
 
 // Start server
 const TIMEOUT = 1000 * process.env.TIMEOUT;

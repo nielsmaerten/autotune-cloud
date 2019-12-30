@@ -10,7 +10,7 @@ RUN apk update && \
     touch /etc/localtime && \
     chown -Rh node:node /openaps/ /etc/localtime
 
-RUN git clone --branch v0.6.3 https://github.com/openaps/oref0
+RUN git clone --branch v0.7.0 https://github.com/openaps/oref0
 WORKDIR /oref0
 RUN npm run global-install
 

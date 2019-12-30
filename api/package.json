@@ -4,7 +4,8 @@
   "description": "An http service for oref0-autotune in a docker container",
   "main": "index.js",
   "scripts": {
-    "prettier": "prettier"
+    "prettier": "prettier",
+    "test": "mocha v2/test/*"
   },
   "author": "Niels Maerten",
   "bugs": {
@@ -12,15 +13,21 @@
   },
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.0",
     "express-fileupload": "^1.1.4",
     "jquery-param": "^1.0.1",
+    "lodash.merge": "^4.6.2",
     "nightscout-profile-convert": "^1.1.0",
     "node-fetch": "^2.6.0",
-    "tz-ids": "^1.0.0"
+    "rimraf": "^3.0.0",
+    "tz-ids": "^1.0.0",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "prettier": "1.17.1"
+    "mocha": "^6.2.2",
+    "prettier": "1.17.1",
+    "sinon": "^8.0.1"
   }
 }
