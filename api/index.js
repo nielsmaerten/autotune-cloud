@@ -1,16 +1,17 @@
 // Dependency imports
-const express = require("express"),
-  cors = require('cors')
-  fileUpload = require("express-fileupload");
+const express = require("express");
+const cors = require('cors');
+const fileUpload = require("express-fileupload");
 
 // Constants
-const port = process.env.PORT,
-  app = express();
+const port = process.env.PORT;
+const app = express();
 
 // Configure Express
 app.use(fileUpload({ safeFileNames: true }));
 app.use(cors());
 
+// Bind handlers
 app.get("/api/v2/run-autotune", require("./v2/main"));
 
 // Start server

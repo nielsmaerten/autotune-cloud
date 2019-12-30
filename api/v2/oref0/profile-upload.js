@@ -16,8 +16,6 @@ module.exports = async (settings, workingDir) => {
 
     // 4. Modify the Nightscout Profile to match the tuned profile
     updateProfile(nsProfile, tunedProfile);
-    console.error(nsProfile);
-    console.error(tunedProfile);
 
     // 5. Overwrite the NS payload with the updated profile, and upload the result
     allProfiles[settings.profileNames.autotune] = nsProfile;
@@ -60,8 +58,6 @@ async function fetchProfiles(settings) {
 }
 
 function updateProfile(nsProfile, tunedProfile) {
-    console.log(nsProfile)
-    console.log(tunedProfile);
     // BASALS
     for (let i = 0; i < tunedProfile.basalprofile.length; i++) {
         const tunedBlock = tunedProfile.basalprofile[i];
