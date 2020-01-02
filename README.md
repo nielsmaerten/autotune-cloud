@@ -9,12 +9,12 @@ Runs oref0-autotune
 
 ## Purpose
 This is meant to replace the nightly run of Autotune
-that exists on OpenAPS rigs. Since this feature
-is not available in AndroidAPS.
+that exists on OpenAPS rigs.  
+Since this feature is not available in AndroidAPS.
 
-Making an HTTP request like this one:
+Make an HTTP request like this one:
 ```
-http://127.0.0.1:3000/api/v2/run-autotune?nsSite=[NS-SITE]&maxDecimals=2&dryRun=0&nsSecret=[NS-SECRET]
+http://127.0.0.1:3000/api/v2/run-autotune?nsSite=[NS-SITE]&nsSecret=[NS-SECRET]&maxDecimals=2&dryRun
 ```
 
 Replace [NS-SITE] with the URL of your own Nightscout site. (eg https://my-ns.herokuapp.com) and [NS-SECRET] with your API secret
@@ -35,7 +35,9 @@ All of these can be passed using the querystring
 * `profileNames[backup]`: Name of your backup profile. Default: `Backup Profile`
 * `min5mCarbImpact`: Default: `8`
 * `categorizeUamAsBasal`: Default: `false`
-* `dryRun`: Default: `true` 
+* `nsSite`: Full URL of the Nightscout site to be tuned. Required.
+* `nsSecret`: API Secret of the Nightscout site. Required if you want the Nightscout profile to be updated
+* `dryRun`: If this option is omitted, you'll receive the Autotune recommendations, but the Nightscout profile won't be updated
 
 ## Next steps...
 To use this service, you still need
