@@ -5,7 +5,7 @@ Runs oref0-autotune
 * for any nightscout site
 * and pushes the results back to nightscout
 
-## This is a Work in Progress...
+### This is a Work in Progress...
 
 ## Purpose
 This is meant to replace the nightly run of Autotune
@@ -14,7 +14,7 @@ Since this feature is not available in AndroidAPS.
 
 Make an HTTP request like this one:
 ```
-http://127.0.0.1:3000/api/v2/run-autotune?nsSite=[NS-SITE]&nsSecret=[NS-SECRET]&maxDecimals=2&writeRecommendations
+http://autotune-cloud.diabase.app/api/v2/run-autotune?nsSite=[NS-SITE]&nsSecret=[NS-SECRET]&maxDecimals=2&writeRecommendations
 ```
 
 Replace [NS-SITE] with the URL of your own Nightscout site. (eg https://my-ns.herokuapp.com) and [NS-SECRET] with your API secret
