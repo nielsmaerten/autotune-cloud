@@ -17,7 +17,7 @@ async function onJobScheduled(change, context) {
         min5mCarbImpact: user.min5mCarbImpact,
         "profileNames[backup]": user.profileNames.backup,
         "profileNames[autotune]": user.profileNames.autotune,
-        dryRun: false
+        writeRecommendations: true
     }
     if (user.categorizeUamAsBasal) autotuneParams.categorizeUamAsBasal = true;
 

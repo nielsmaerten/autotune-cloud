@@ -1,7 +1,7 @@
 module.exports = {
   defaultSettings: {
     // Defaults
-    dryRun: true,
+    writeRecommendations: false,
     profileNames: {
       backup: "Backup Profile",
       autotune: "Autotune"

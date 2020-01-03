@@ -14,7 +14,7 @@ Since this feature is not available in AndroidAPS.
 
 Make an HTTP request like this one:
 ```
-http://127.0.0.1:3000/api/v2/run-autotune?nsSite=[NS-SITE]&nsSecret=[NS-SECRET]&maxDecimals=2&dryRun
+http://127.0.0.1:3000/api/v2/run-autotune?nsSite=[NS-SITE]&nsSecret=[NS-SECRET]&maxDecimals=2&writeRecommendations
 ```
 
 Replace [NS-SITE] with the URL of your own Nightscout site. (eg https://my-ns.herokuapp.com) and [NS-SECRET] with your API secret
@@ -37,7 +37,7 @@ All of these can be passed using the querystring
 * `categorizeUamAsBasal`: Default: `false`
 * `nsSite`: Full URL of the Nightscout site to be tuned. Required.
 * `nsSecret`: API Secret of the Nightscout site. Required if you want the Nightscout profile to be updated
-* `dryRun`: Default `true`. CAREFUL! By default you'll just receive the Autotune recommendations, but Nightscout won't be updated. If you add this option (no matter its value), recommendations will be applied directly to Nightscout.
+* `writeRecommendations`: Default `false`. CAREFUL! By default you'll just receive the Autotune recommendations, but Nightscout won't be updated. If you add this option (no matter its value), recommendations will be applied directly to Nightscout.
 
 ## Next steps...
 To use this service, you still need

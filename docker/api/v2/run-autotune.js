@@ -20,7 +20,7 @@ module.exports = async (openApsFiles, settings) => {
   console.log("Autotune finished.");
 
   // Upload profile
-  if (settings.dryRun !== true) {
+  if (settings.writeRecommendations !== false) {
     await oref0.upload(settings, workingDir).catch(e => error(e));
     console.log("Profile uploaded to Nightscout. Cleaning up...");
   }
