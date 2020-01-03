@@ -11,5 +11,5 @@ cd autotune-cloud/docker
 # export PROJECT_ID="$(gcloud config get-value project -q)"
 export PROJECT_ID=autotune-cloud
 
-docker build -t gcr.io/${PROJECT_ID}/autotune .
-docker push gcr.io/${PROJECT_ID}/autotune
+docker build -t eu.gcr.io/${PROJECT_ID}/autotune .
+docker push eu.gcr.io/${PROJECT_ID}/autotune
