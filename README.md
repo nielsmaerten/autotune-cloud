@@ -37,12 +37,14 @@ All of these can be passed using the querystring
 * `categorizeUamAsBasal`: Default: `false`
 * `nsSite`: Full URL of the Nightscout site to be tuned. Required.
 * `nsSecret`: API Secret of the Nightscout site. Required if you want the Nightscout profile to be updated
-* `writeRecommendations`: Default `false`. CAREFUL! By default you'll just receive the Autotune recommendations, but Nightscout won't be updated. If you add this option (no matter its value), recommendations will be applied directly to Nightscout.
+* `writeRecommendations`: Default `false`. **CAREFUL!** By default you'll just receive the Autotune recommendations, but Nightscout won't be updated. If you add this option (no matter its value), recommendations will be applied directly to Nightscout.
 
 ## Next steps...
 I am currently running this service in private beta.  
-This means that every night Autotune runs on my Nightscout data, even though
+This means that every night Autotune runs on my Nightscout data, even though  
 I have no servers or OpenAPS rig. (I'm using AndroidAPS)
 
 If you're interested, you can join me in testing this.  
 Shoot me an email and I'll add you to the list of testers.
+
+hello@niels.me
