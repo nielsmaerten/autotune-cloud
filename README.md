@@ -41,8 +41,10 @@ All of these can be passed using the querystring
 
 ## Next steps...
 To use this service, you still need
-* a cron job that calls it every night
+* a cron job that calls it every night **
 * an automation task in AndroidAPS to switch your profile after it's been updated
 
 These functions will eventually be implemented in this project natively.
   
+** This is now available in private beta. Contact me if you'd like to join.  
+I will add you to the list of users, and Autotune will run nightly for you.

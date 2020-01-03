@@ -1,13 +1,13 @@
-import axios from "axios";
-import { config } from "firebase-functions";
+const axios = require("axios").default;
+const config = require("firebase-functions").config;
+const firestore = require("firebase-admin").firestore;
 
 /**
  * - Called when a job is created for a user
  * @param {import("firebase-functions/lib/providers/firestore").DocumentSnapshot} change 
  * @param {import("firebase-functions").EventContext} context 
  */
-function onJobScheduled(change, context) {
-    let autotuneUrl = config().settings.autotune_url;
+async function onJobScheduled(change, context) {
     let user = change.data();
 
     // Configure parameters for Autotune run
@@ -16,26 +16,39 @@ function onJobScheduled(change, context) {
         nsSecret: user.nsSecret,
         min5mCarbImpact: user.min5mCarbImpact,
         "profileNames[backup]": user.profileNames.backup,
-        "profileNames[autotune]": user.profileNames.autotune
+        "profileNames[autotune]": user.profileNames.autotune,
+        dryRun: true
     }
     if (user.categorizeUamAsBasal) autotuneParams.categorizeUamAsBasal = true;
 
     // Start Autotune by calling docker container
-    let response = await axios.get(autotuneUrl, {
-        data: autotuneParams
-    })
+    let autotuneUrl = config().settings.autotune_url;
+    let error;
+    console.log("Running Autotune for", context.params.jobId, "with these parameters:", autotuneParams);
 
-    // Throw error if response was not OK
-    if (response.status !== 200) {
+    // Send HTTP request with user parameters
+    await axios.get(autotuneUrl, {
+        params: autotuneParams
+    }).catch(e => { error = e })
+
+
+    // Clean up the job document
+    await firestore().doc(`jobs/${context.params.jobId}`).delete();
+
+    // Throw if result was not OK
+    if (error) {
         throw new Error(`
-            Error running Autotune for user: 
-            ================================
-            ${user}
+        Error running Autotune for user: 
+        ================================
+        ${context.params.jobId}
+        ${JSON.stringify(user)}
 
-            Error details: 
-            ==============
-            ${response.data}
-        `)
+        Error details: 
+        ==============
+        ${error}
+    `)
     }
+
+
 }
-export default onJobScheduled;
+module.exports = onJobScheduled;

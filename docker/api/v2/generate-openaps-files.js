@@ -16,7 +16,7 @@ module.exports = async settings => {
   // 2: Verify both profiles are present
   if (!profiles[settings.profileNames.backup] || !profiles[settings.profileNames.autotune])
     throw new Error(`
-        Your Nightscout site needs is required to have these 2 profiles:
+        Your Nightscout site is required to have these 2 profiles:
         - "${settings.profileNames.autotune}" 
         - "${settings.profileNames.backup}"
 
