@@ -22,7 +22,7 @@ module.exports = async (openApsFiles, settings) => {
   // Upload profile
   if (settings.writeRecommendations !== false) {
     await oref0.upload(settings, workingDir).catch(e => error(e));
-    console.log("Profile uploaded to Nightscout. Cleaning up...");
+    console.log("Profile uploaded to Nightscout.");
   }
 
   // Cleanup
