@@ -28,11 +28,19 @@ async function isRigOnline(settings, minimumOnline) {
   let now = new Date();
   let cutoff = 1000 * 60 * minimumOnline; // minutes to milliseconds
 
-  let lastEntryPostCutoff = (now.getTime() - cutoff < lastEntryDate.getTime());
+  let lastEntryPostCutoff = now.getTime() - cutoff < lastEntryDate.getTime();
   return lastEntryPostCutoff;
+}
+
+function sha1(input) {
+  return require("crypto")
+    .createHash("sha1")
+    .update(input)
+    .digest("hex");
 }
 
 module.exports = {
   getSettings,
-  isRigOnline
+  isRigOnline,
+  sha1
 };

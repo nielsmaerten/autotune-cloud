@@ -1,5 +1,6 @@
 const roundProfileBlocks = require("./round-profile-blocks");
 const axios = require("axios").default;
+const sha1 = require("../utilities").sha1;
 
 module.exports = async (settings, workingDir) => {
   // 1. Round profile blocks
@@ -21,18 +22,14 @@ module.exports = async (settings, workingDir) => {
   allProfiles[settings.profileNames.autotune] = nsProfile;
   payload.store = allProfiles;
   await uploadProfiles(payload, settings);
+
+  // 6. Switch to the newly updated profile
+  await require("./profile-switch")(settings);
 };
 
 /*************************
  *   HELPER FUNCTIONS    *
  *************************/
-
-function sha1(input) {
-  return require("crypto")
-    .createHash("sha1")
-    .update(input)
-    .digest("hex");
-}
 
 async function uploadProfiles(profiles, settings) {
   let url = `${settings.nsSite}/api/v1/profile`;

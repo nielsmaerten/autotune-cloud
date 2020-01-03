@@ -27,7 +27,7 @@ This will:
 ## Requirements
 You need to have 2 profiles in your Nightscout:
 * a profile called "Autotune", which should be the one you're using on your rig. This one will be updated automatically
-* a profile called "Backup Profile". Autotune will not deviate further than 20% from this profile, and it can be used as a fallback in case anything goed wrong.
+* a profile called "Backup Profile". Autotune will not deviate further than 20% from this profile, and it can be used as a fallback in case anything goes wrong.
 
 ## Options
 All of these can be passed using the querystring
@@ -40,11 +40,9 @@ All of these can be passed using the querystring
 * `writeRecommendations`: Default `false`. CAREFUL! By default you'll just receive the Autotune recommendations, but Nightscout won't be updated. If you add this option (no matter its value), recommendations will be applied directly to Nightscout.
 
 ## Next steps...
-To use this service, you still need
-* a cron job that calls it every night **
-* an automation task in AndroidAPS to switch your profile after it's been updated
+I am currently running this service in private beta.  
+This means that every night Autotune runs on my Nightscout data, even though
+I have no servers or OpenAPS rig. (I'm using AndroidAPS)
 
-These functions will eventually be implemented in this project natively.
-  
-** This is now available in private beta. Contact me if you'd like to join.  
-I will add you to the list of users, and Autotune will run nightly for you.
+If you're interested, you can join me in testing this.  
+Shoot me an email and I'll add you to the list of testers.
