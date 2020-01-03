@@ -37,7 +37,7 @@ All of these can be passed using the querystring
 * `categorizeUamAsBasal`: Default: `false`
 * `nsSite`: Full URL of the Nightscout site to be tuned. Required.
 * `nsSecret`: API Secret of the Nightscout site. Required if you want the Nightscout profile to be updated
-* `dryRun`: If this option is omitted, you'll receive the Autotune recommendations, but the Nightscout profile won't be updated
+* `dryRun`: Default `true`. CAREFUL! By default you'll just receive the Autotune recommendations, but Nightscout won't be updated. If you add this option (no matter its value), recommendations will be applied directly to Nightscout.
 
 ## Next steps...
 To use this service, you still need
