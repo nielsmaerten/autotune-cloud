@@ -17,7 +17,7 @@ async function scheduler(context) {
         .where("enabled", "==", true)
         .where("nextRun", "<=", _10minutesFromNow);
     let users = await query.get();
-    console.log("Scheduling autotune for", users.size, "user(s)...");
+    if (users.size > 0) console.log("Scheduling autotune for", users.size, "user(s)...");
 
     // Schedule a job for each user
     let batch = firestore().batch(), batchCount = 0;
