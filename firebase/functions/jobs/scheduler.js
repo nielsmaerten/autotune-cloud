@@ -30,7 +30,7 @@ async function scheduler(context) {
         batch.set(firestore().doc(`jobs/${user.id}`), userData);
 
         // Schedule the next run in 24 hours
-        userData.nextRun = new Date(userData.nextRun.getTime() + (24 * 60 * 60 * 1000));
+        userData.nextRun = new Date(userData.nextRun.toMillis() + (24 * 60 * 60 * 1000));
         batch.update(firestore().doc(`users/${user.id}`), userData);
 
         // Commit the batch if this is the last user,
