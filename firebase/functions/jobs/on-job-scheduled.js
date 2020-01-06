@@ -4,41 +4,63 @@ const firestore = require("firebase-admin").firestore;
 
 /**
  * - Called when a job is created for a user
- * @param {import("firebase-functions/lib/providers/firestore").DocumentSnapshot} change 
- * @param {import("firebase-functions").EventContext} context 
+ * @param {import("firebase-functions/lib/providers/firestore").DocumentSnapshot} change
+ * @param {import("firebase-functions").EventContext} context
  */
 async function onJobScheduled(change, context) {
-    let user = change.data();
+  let user = change.data();
 
-    // Configure parameters for Autotune run
-    let autotuneParams = {
-        nsSite: user.nsSite,
-        nsSecret: user.nsSecret,
-        min5mCarbImpact: user.min5mCarbImpact,
-        "profileNames[backup]": user.profileNames.backup,
-        "profileNames[autotune]": user.profileNames.autotune,
-        writeRecommendations: true,
-        maxDecimals: user.maxDecimals
-    }
-    if (user.categorizeUamAsBasal) autotuneParams.categorizeUamAsBasal = true;
+  // Configure parameters for Autotune run
+  let autotuneParams = {
+    nsSite: user.nsSite,
+    nsSecret: user.nsSecret,
+    min5mCarbImpact: user.min5mCarbImpact,
+    "profileNames[backup]": user.profileNames.backup,
+    "profileNames[autotune]": user.profileNames.autotune,
+    writeRecommendations: true,
+    maxDecimals: user.maxDecimals
+  };
+  if (user.categorizeUamAsBasal) autotuneParams.categorizeUamAsBasal = true;
 
-    // Start Autotune by calling docker container
-    let autotuneUrl = config().settings.autotune_url;
-    let error;
-    console.log("Running Autotune for", context.params.jobId, "with these parameters:", autotuneParams);
+  // Start Autotune by calling docker container
+  let autotuneUrl = config().settings.autotune_url;
+  let error;
+  let msg = `Running Autotune for ${context.params.jobId} with these params: ${autotuneParams}`;
+  console.log(msg);
 
-    // Send HTTP request with user parameters
-    await axios.get(autotuneUrl, {
-        params: autotuneParams
-    }).catch(e => { error = e })
+  // Send HTTP request with user parameters
+  let response = await axios
+    .get(autotuneUrl, {
+      params: autotuneParams
+    })
+    .catch(e => {
+      error = e;
+    });
 
+  // Send log by email if user has an email address defined
+  await firestore()
+    .collection("mail")
+    .add({
+      toUids: [context.params.jobId],
+      template: {
+        name: "daily-results",
+        data: {
+          output: response.data,
+          date: new Date().toLocaleDateString("en-US"),
+          nightscoutUpdated: true,
+          name: user.name
+        }
+      }
+    });
 
-    // Clean up the job document
-    await firestore().doc(`jobs/${context.params.jobId}`).delete();
+  // Clean up the job document
+  await firestore()
+    .doc(`jobs/${context.params.jobId}`)
+    .delete();
 
-    // Throw if result was not OK
-    if (error) {
-        throw new Error(`
+  // Throw if result was not OK
+  if (error) {
+    throw new Error(`
         Error running Autotune for user: 
         ================================
         ${context.params.jobId}
@@ -47,9 +69,7 @@ async function onJobScheduled(change, context) {
         Error details: 
         ==============
         ${error}
-    `)
-    }
-
-
+    `);
+  }
 }
 module.exports = onJobScheduled;
