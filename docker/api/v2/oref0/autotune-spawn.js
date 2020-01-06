@@ -1,5 +1,6 @@
 const childProcess = require("child_process");
 const fs = require("fs");
+const glob = require("glob");
 
 module.exports = async (settings, workingDir) => {
   // Start process externally
@@ -7,21 +8,29 @@ module.exports = async (settings, workingDir) => {
 
   return new Promise((resolve, reject) => {
     child.on("error", reject);
-    child.on("close", exitCode => {
+    child.on("close", async exitCode => {
       if (exitCode === 0) {
         fs.copyFileSync(
           // This overwrites /settings/profile.json
           `${workingDir}/autotune/profile.json`,
           `${workingDir}/settings/profile.json`
         );
-        let recommendations = fs.readFileSync(
-          `${workingDir}/autotune/autotune_recommendations.log`
-        );
+        let recommendations = await readLogFile(workingDir);
         resolve(recommendations);
       } else reject("Autotune failed with exit code: " + exitCode);
     });
   });
 };
+
+function readLogFile(workingDir) {
+  return new Promise((resolve, reject) => {
+    glob(`${workingDir}/autotune/autotune.*.log`, (err, files) => {
+      if (err) reject(err);
+      let fileContents = fs.readFileSync(files[0]);
+      resolve(fileContents);
+    });
+  });
+}
 
 function spawnAutotune(settings, workingDir) {
   let parameters = [
