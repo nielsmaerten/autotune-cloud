@@ -27,7 +27,7 @@ async function handleRequest(/** @type Express.Request */ req, /** @type Express
 
   // Finish request
   console.log("Done.");
-  return res.status(200).send(recommendations);
+  return res.status(200).type("text/plain").send(recommendations);
 }
 
 function onError(error, operation) {
