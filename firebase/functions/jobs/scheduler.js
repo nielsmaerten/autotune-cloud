@@ -31,8 +31,9 @@ async function scheduler(context) {
     // Create a 'job' document to trigger Autotune
     batch.set(firestore().doc(`jobs/${user.id}`), userData);
 
-    // Schedule the next run in 24 hours
-    userData.nextRun = new Date(userData.nextRun.toMillis() + 24 * 60 * 60 * 1000);
+    // Schedule the next run
+    let msFromNow = userData.runInterval * 86400000; // runInterval * 1 day
+    userData.nextRun = new Date(userData.nextRun.toMillis() + msFromNow);
     batch.update(firestore().doc(`users/${user.id}`), userData);
 
     // Commit the batch if this is the last user,
