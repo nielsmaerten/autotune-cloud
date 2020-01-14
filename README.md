@@ -14,7 +14,7 @@ Since this feature is not available in AndroidAPS.
 
 Make an HTTP request like this one:
 ```
-http://autotune-cloud.diabase.app/api/v2/run-autotune?nsSite=[NS-SITE]&nsSecret=[NS-SECRET]&maxDecimals=2&writeRecommendations
+https://autotune-cloud.diabase.app/api/v2/run-autotune?nsSite=[NS-SITE]&nsSecret=[NS-SECRET]&maxDecimals=2&writeRecommendations
 ```
 
 Replace [NS-SITE] with the URL of your own Nightscout site. (eg https://my-ns.herokuapp.com) and [NS-SECRET] with your API secret

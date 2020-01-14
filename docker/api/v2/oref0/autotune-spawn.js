@@ -37,7 +37,7 @@ function spawnAutotune(settings, workingDir) {
     "-d=" + workingDir,
     "-n=" + settings.nsSite,
     "--categorize-uam-as-basal=" + settings.categorizeUamAsBasal,
-    "--start-days-ago" + settings.startDaysAgo
+    "--start-days-ago=" + settings.startDaysAgo
   ];
   console.log("oref0-autotune", parameters.join(" "));
   return childProcess.spawn("oref0-autotune", parameters, {
