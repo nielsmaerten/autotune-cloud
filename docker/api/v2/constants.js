@@ -9,6 +9,7 @@ module.exports = {
     min5mCarbImpact: 8,
     categorizeUamAsBasal: false,
     maxDecimals: 2,
+    startDaysAgo: 1,
 
     // User-provided parameters
     nsSite: undefined,
