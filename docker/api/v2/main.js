@@ -27,7 +27,10 @@ async function handleRequest(/** @type Express.Request */ req, /** @type Express
 
   // Finish request
   console.log("Done.");
-  return res.status(200).type("text/plain").send(recommendations);
+  return res
+    .status(200)
+    .type("text/plain")
+    .send(recommendations);
 }
 
 function onError(error, operation) {
@@ -41,7 +44,9 @@ function onError(error, operation) {
 
 module.exports = (req, res) => {
   return handleRequest(req, res).catch(e => {
-    console.error(e);
-    res.status(400).send("" + e);
+    let timedOut = e.toString().indexOf("[TIMEOUT]" !== -1);
+    let statusCode = timedOut ? 504 : 400;
+
+    return res.status(statusCode).send("" + e);
   });
 };

@@ -1,7 +1,9 @@
 FROM node:12.3.1-alpine
 ARG PORT=3000
 ENV PORT=$PORT
-ARG TIMEOUT=120
+
+# 15 minutes is the max timeout currently allowed by Google CloudRun 
+ARG TIMEOUT=900
 ENV TIMEOUT=$TIMEOUT
 
 RUN apk update && \

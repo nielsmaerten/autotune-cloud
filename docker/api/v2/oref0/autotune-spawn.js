@@ -1,15 +1,30 @@
 const childProcess = require("child_process");
 const fs = require("fs");
 const glob = require("glob");
+const TIMEOUT = process.env.TIMEOUT;
 
 module.exports = async (settings, workingDir) => {
   // Start process externally
   let child = spawnAutotune(settings, workingDir);
 
+  // Kill process a few seconds before timeout expires
+  let processTimedOut = false;
+  let processTimeout = (TIMEOUT - 3) * 1000;
+  let timeoutHandle = setTimeout(() => {
+    processTimedOut = true;
+    child.kill();
+  }, processTimeout);
+
   return new Promise((resolve, reject) => {
     child.on("error", reject);
     child.on("close", async exitCode => {
-      if (exitCode === 0) {
+      clearTimeout(timeoutHandle);
+      if (processTimedOut) {
+        reject(`
+          [TIMEOUT] Sorry! Autotune jobs are capped after ${TIMEOUT} seconds.
+          This request took longer and was aborted. Try decreasing the number of days.
+        `);
+      } else if (exitCode === 0) {
         fs.copyFileSync(
           // This overwrites /settings/profile.json
           `${workingDir}/autotune/profile.json`,
