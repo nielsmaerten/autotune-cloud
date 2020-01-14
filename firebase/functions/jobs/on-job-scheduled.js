@@ -18,7 +18,8 @@ async function onJobScheduled(change, context) {
     "profileNames[backup]": user.profileNames.backup,
     "profileNames[autotune]": user.profileNames.autotune,
     writeRecommendations: true,
-    maxDecimals: user.maxDecimals
+    maxDecimals: user.maxDecimals,
+    startDaysAgo: user.runInterval
   };
   if (user.categorizeUamAsBasal) autotuneParams.categorizeUamAsBasal = true;
 
