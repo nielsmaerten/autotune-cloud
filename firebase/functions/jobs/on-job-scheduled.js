@@ -46,7 +46,7 @@ async function onJobScheduled(change, context) {
         name: "daily-results",
         data: {
           output: response.data,
-          date: new Date().toLocaleDateString("en-US"),
+          date: new Intl.DateTimeFormat("en-US", { dateStyle: "full" }).format(new Date()),
           nightscoutUpdated: true,
           name: user.name
         }
