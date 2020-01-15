@@ -8,27 +8,20 @@ module.exports = async (settings, workingDir) => {
   let child = spawnAutotune(settings, workingDir);
 
   // Kill process a few seconds before timeout expires
-  let processTimedOut = false;
   let processTimeout = (TIMEOUT - 3) * 1000;
   let timeoutHandle = setTimeout(() => {
-    processTimedOut = true;
     child.kill();
   }, processTimeout);
 
   return new Promise((resolve, reject) => {
     child.on("error", reject);
-    child.on("close", async exitCode => {
-      console.log("The process has quit. Exitcode is", exitCode);
-      console.log("Now clearing the timeout", timeoutHandle);
+    child.on("exit", async (exitCode, signal) => {
+      console.log("Autotune exited. Code:", exitCode, "Signal:", signal);
       clearTimeout(timeoutHandle);
-      console.log("Timeout cleared. Process timedout was:", processTimedOut)
-      if (processTimedOut) {
+      if (signal !== null) {
         reject(`
           [TIMEOUT] Sorry! Autotune jobs are capped after ${TIMEOUT} seconds.
           This request took longer and was aborted. Try decreasing the number of days.
-
-          Logfile so far:
-          ${await readLogFile(workingDir)}
         `);
       } else if (exitCode === 0) {
         fs.copyFileSync(
