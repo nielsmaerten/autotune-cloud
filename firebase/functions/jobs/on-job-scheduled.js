@@ -17,11 +17,13 @@ async function onJobScheduled(change, context) {
     min5mCarbImpact: user.min5mCarbImpact,
     "profileNames[backup]": user.profileNames.backup,
     "profileNames[autotune]": user.profileNames.autotune,
-    writeRecommendations: !user.dryRun,
     maxDecimals: user.maxDecimals,
     startDaysAgo: user.runInterval
   };
+
+  // The following parameters should be omitted to be falsy, so only add them if truthy
   if (user.categorizeUamAsBasal) autotuneParams.categorizeUamAsBasal = true;
+  if (!user.dryRun) autotuneParams.writeRecommendations = true;
 
   // Start Autotune by calling docker container
   let autotuneUrl = config().settings.autotune_url;
