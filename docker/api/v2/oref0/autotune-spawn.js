@@ -15,6 +15,8 @@ module.exports = async (settings, workingDir) => {
 
   return new Promise((resolve, reject) => {
     child.on("error", reject);
+    child.on("disconnect", () => {console.error("AUTOTUNE DISCONNECTED"); reject()});
+    child.on("message", (msg) => {console.error("AUTOTUNE MESSAGE"); reject(msg)});
     child.on("exit", async (exitCode, signal) => {
       console.log("Autotune exited. Code:", exitCode, "Signal:", signal);
       clearTimeout(timeoutHandle);
