@@ -22,6 +22,8 @@ module.exports = async (settings, workingDir) => {
         reject(`
           [TIMEOUT] Sorry! Autotune jobs are capped after ${TIMEOUT} seconds.
           This request took longer and was aborted. Try decreasing the number of days.
+
+          ${await readLogFile(workingDir)}
         `);
       } else if (exitCode === 0) {
         fs.copyFileSync(
