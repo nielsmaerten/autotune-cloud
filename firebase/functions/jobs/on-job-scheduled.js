@@ -17,7 +17,7 @@ async function onJobScheduled(change, context) {
     min5mCarbImpact: user.min5mCarbImpact,
     "profileNames[backup]": user.profileNames.backup,
     "profileNames[autotune]": user.profileNames.autotune,
-    writeRecommendations: true,
+    writeRecommendations: !user.dryRun,
     maxDecimals: user.maxDecimals,
     startDaysAgo: user.runInterval
   };
@@ -39,16 +39,16 @@ async function onJobScheduled(change, context) {
     });
 
   // Send log by email if user has an email address defined
-  if (!error) await firestore()
+  await firestore()
     .collection("mail")
     .add({
       toUids: [context.params.jobId],
       template: {
         name: "daily-results",
         data: {
-          output: response.data,
+          output: error || response.data,
           date: new Intl.DateTimeFormat("en-US", { dateStyle: "full" }).format(new Date()),
-          nightscoutUpdated: true,
+          nightscoutUpdated: !user.dryRun,
           name: user.name
         }
       }
