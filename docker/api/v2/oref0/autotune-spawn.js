@@ -7,11 +7,16 @@ module.exports = async (settings, workingDir) => {
   // Start process externally
   let child = spawnAutotune(settings, workingDir);
 
+  // Kill process a few seconds before timeout expires	
+  let processTimeout = (TIMEOUT - 4) * 1000;
+  let timeoutHandle = setTimeout(() => {
+    child.kill();
+  }, processTimeout);
+
   return new Promise((resolve, reject) => {
     child.on("error", reject);
-    child.on("disconnect", () => { console.error("AUTOTUNE DISCONNECTED"); reject() });
-    child.on("message", (msg) => { console.error("AUTOTUNE MESSAGE"); reject(msg) });
     child.on("exit", async (exitCode, signal) => {
+      clearTimeout(timeoutHandle);
       console.log("Autotune exited. Code:", exitCode, "Signal:", signal);
       if (signal !== null) {
         reject(`
@@ -55,7 +60,6 @@ function spawnAutotune(settings, workingDir) {
       TZ: settings.timezone
     },
     detached: false,
-    timeout: (TIMEOUT - 3) * 1000,
     stdio: ["ignore", out, err]
   });
 }
