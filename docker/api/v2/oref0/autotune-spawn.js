@@ -38,7 +38,7 @@ module.exports = async (settings, workingDir) => {
 
 function readLogFile(workingDir) {
   return new Promise((resolve, reject) => {
-    glob(`${workingDir}/autotune/autotune.*.log`, (err, files) => {
+    glob(`${workingDir}/autotune/autotune_recommendations.log`, (err, files) => {
       if (err) reject(err);
       let fileContents = fs.readFileSync(files[0]);
       resolve(fileContents);
