@@ -31,9 +31,8 @@ module.exports = async (openApsFiles, settings) => {
     console.log("Cleaning up...");
     require("rimraf").sync(workingDir);
   } else {
-    console.log("DEBUGGING: Cleanup skipped.")
+    console.log("DEBUGGING: Cleanup skipped.");
   }
-
 
   return recommendations;
 };

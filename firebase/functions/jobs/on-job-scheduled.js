@@ -26,7 +26,9 @@ async function onJobScheduled(change, context) {
   // Start Autotune by calling docker container
   let autotuneUrl = config().settings.autotune_url;
   let error;
-  let msg = `Running Autotune for ${context.params.jobId} with these params: ${autotuneParams}`;
+  let msg = `Running Autotune for ${context.params.jobId} with these params: ${JSON.stringify(
+    autotuneParams
+  )}`;
   console.log(msg);
 
   // Send HTTP request with user parameters

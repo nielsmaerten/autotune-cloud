@@ -7,7 +7,7 @@ module.exports = async (settings, workingDir) => {
   // Start process externally
   let child = spawnAutotune(settings, workingDir);
 
-  // Kill process a few seconds before timeout expires	
+  // Kill process a few seconds before timeout expires
   let processTimeout = (TIMEOUT - 4) * 1000;
   let timeoutHandle = setTimeout(() => {
     child.kill();
@@ -52,8 +52,8 @@ function spawnAutotune(settings, workingDir) {
     "--categorize-uam-as-basal=" + settings.categorizeUamAsBasal,
     "--start-days-ago=" + settings.startDaysAgo
   ];
-  let out = fs.openSync(`${workingDir}/autotune-cloud.log`, 'a');
-  let err = fs.openSync(`${workingDir}/autotune-cloud.log`, 'a');
+  let out = fs.openSync(`${workingDir}/autotune-cloud.log`, "a");
+  let err = fs.openSync(`${workingDir}/autotune-cloud.log`, "a");
   console.log("oref0-autotune", parameters.join(" "));
   return childProcess.spawn("oref0-autotune", parameters, {
     env: {
