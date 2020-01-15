@@ -39,7 +39,7 @@ async function onJobScheduled(change, context) {
     });
 
   // Send log by email if user has an email address defined
-  await firestore()
+  if (!error) await firestore()
     .collection("mail")
     .add({
       toUids: [context.params.jobId],
