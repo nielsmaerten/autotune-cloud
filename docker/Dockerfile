@@ -2,8 +2,10 @@ FROM node:12.3.1-alpine
 ARG PORT=3000
 ENV PORT=$PORT
 
-# 15 minutes is the max timeout currently allowed by Google CloudRun 
-ARG TIMEOUT=900
+# Max allowed timeout for Cloud Functions: 9 minutes
+# NB: CloudRun allows 15 minutes, but in my current implementation the cloud function
+# awaits the result from CloudRun, so we're limited to 9 minutes.
+ARG TIMEOUT=540
 ENV TIMEOUT=$TIMEOUT
 
 RUN apk update && \
