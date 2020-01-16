@@ -1,3 +1,4 @@
+// @ts-check
 const axios = require("axios").default;
 const config = require("firebase-functions").config;
 const firestore = require("firebase-admin").firestore;
@@ -40,11 +41,12 @@ async function onJobScheduled(change, context) {
     })
     .catch(e => {
       error = e;
+      return e.response;
     });
 
   // Send log by email if user has an email address defined
-  let format = {weekday: 'long', month:'long', day:'numeric'};
-  let today = new Date()
+  let format = { weekday: "long", month: "long", day: "numeric" };
+  let today = new Date();
   await firestore()
     .collection("mail")
     .add({
@@ -53,7 +55,7 @@ async function onJobScheduled(change, context) {
       template: {
         name: "autotune-results",
         data: {
-          output: error || response.data,
+          output: response.data,
           date: today.toLocaleDateString("en", format),
           nightscoutUpdated: !user.dryRun,
           name: user.name
