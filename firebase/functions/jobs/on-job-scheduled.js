@@ -48,6 +48,7 @@ async function onJobScheduled(change, context) {
   await firestore()
     .collection("mail")
     .add({
+      from: "Autotune Cloud<autotune@diabase.app>",
       toUids: [context.params.jobId],
       template: {
         name: "autotune-results",
