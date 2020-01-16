@@ -2,6 +2,7 @@
 const axios = require("axios").default;
 const config = require("firebase-functions").config;
 const firestore = require("firebase-admin").firestore;
+const constants = require("../constants");
 
 /**
  * - Called when a job is created for a user
@@ -19,7 +20,8 @@ async function onJobScheduled(change, context) {
     "profileNames[backup]": user.profileNames.backup,
     "profileNames[autotune]": user.profileNames.autotune,
     maxDecimals: user.maxDecimals,
-    startDaysAgo: user.runInterval
+    startDaysAgo: user.runInterval,
+    customTimeout: constants.maxJobRuntimeSeconds - 5
   };
 
   // The following parameters should be omitted to be falsy, so only add them if truthy

@@ -8,7 +8,7 @@ module.exports = async (settings, workingDir) => {
   let child = spawnAutotune(settings, workingDir);
 
   // Kill process a few seconds before timeout expires
-  let processTimeout = (TIMEOUT - 4) * 1000;
+  let processTimeout = getMaxRuntimeMs(settings);
   let timeoutHandle = setTimeout(() => {
     child.kill();
   }, processTimeout);
@@ -62,4 +62,22 @@ function spawnAutotune(settings, workingDir) {
     detached: false,
     stdio: ["ignore", out, err]
   });
+}
+
+function getMaxRuntimeMs(settings) {
+  let timeout;
+
+  // Use custom timeout if provided, and
+  // lower than system-assigned timeout
+  if (settings.customTimeout && settings.customTimeout < TIMEOUT) {
+    timeout = settings.customTimeout;
+  } else {
+    timeout = TIMEOUT;
+  }
+
+  // Kill the process a few seconds before timeout expires
+  // That way we can still send back the HTTP response
+  timeout -= 5;
+
+  return timeout * 1000;
 }

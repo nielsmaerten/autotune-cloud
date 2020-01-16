@@ -1,10 +1,13 @@
+// @ts-check
+
 const functions = require("firebase-functions");
+const constants = require("./constants");
 
 let scheduleJobs = functions.pubsub
-  .schedule("0,15,30,45 * * * *")
+  .schedule(constants.cronSchedule)
   .onRun(require("./jobs/scheduler"));
 let onJobScheduled = functions
-  .runWith({ timeoutSeconds: 540 })
+  .runWith({ timeoutSeconds: constants.maxJobRuntimeSeconds })
   .firestore.document("jobs/{jobId}")
   .onCreate(require("./jobs/on-job-scheduled"));
 

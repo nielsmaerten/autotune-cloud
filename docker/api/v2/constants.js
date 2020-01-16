@@ -13,6 +13,7 @@ module.exports = {
 
     // User-provided parameters
     nsSite: undefined,
-    nsApiSecret: undefined
+    nsApiSecret: undefined,
+    customTimeout: undefined
   }
 };
