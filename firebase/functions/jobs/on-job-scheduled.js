@@ -1,3 +1,4 @@
+// @ts-check
 const axios = require("axios").default;
 const config = require("firebase-functions").config;
 const firestore = require("firebase-admin").firestore;
@@ -17,16 +18,20 @@ async function onJobScheduled(change, context) {
     min5mCarbImpact: user.min5mCarbImpact,
     "profileNames[backup]": user.profileNames.backup,
     "profileNames[autotune]": user.profileNames.autotune,
-    writeRecommendations: !user.dryRun,
     maxDecimals: user.maxDecimals,
     startDaysAgo: user.runInterval
   };
+
+  // The following parameters should be omitted to be falsy, so only add them if truthy
   if (user.categorizeUamAsBasal) autotuneParams.categorizeUamAsBasal = true;
+  if (!user.dryRun) autotuneParams.writeRecommendations = true;
 
   // Start Autotune by calling docker container
   let autotuneUrl = config().settings.autotune_url;
   let error;
-  let msg = `Running Autotune for ${context.params.jobId} with these params: ${autotuneParams}`;
+  let msg = `Running Autotune for ${context.params.jobId} with these params: ${JSON.stringify(
+    autotuneParams
+  )}`;
   console.log(msg);
 
   // Send HTTP request with user parameters
@@ -36,18 +41,22 @@ async function onJobScheduled(change, context) {
     })
     .catch(e => {
       error = e;
+      return e.response;
     });
 
   // Send log by email if user has an email address defined
+  let format = { weekday: "long", month: "long", day: "numeric" };
+  let today = new Date();
   await firestore()
     .collection("mail")
     .add({
+      from: "Autotune Cloud<autotune@diabase.app>",
       toUids: [context.params.jobId],
       template: {
-        name: "daily-results",
+        name: "autotune-results",
         data: {
-          output: error || response.data,
-          date: new Intl.DateTimeFormat("en-US", { dateStyle: "full" }).format(new Date()),
+          output: response.data,
+          date: today.toLocaleDateString("en", format),
           nightscoutUpdated: !user.dryRun,
           name: user.name
         }

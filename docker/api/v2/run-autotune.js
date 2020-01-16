@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const v4uuid = require("uuid/v4");
 const oref0 = require("./oref0");
+const isProd = !!process.env.K_REVISION;
 
 module.exports = async (openApsFiles, settings) => {
   // Prepare a working directory: /openaps/[UUID]
@@ -26,8 +27,12 @@ module.exports = async (openApsFiles, settings) => {
   }
 
   // Cleanup
-  console.log("Cleaning up...");
-  require("rimraf").sync(workingDir);
+  if (isProd) {
+    console.log("Cleaning up...");
+    require("rimraf").sync(workingDir);
+  } else {
+    console.log("DEBUGGING: Cleanup skipped.");
+  }
 
   return recommendations;
 };

@@ -1,28 +1,31 @@
+// @ts-check
 const childProcess = require("child_process");
 const fs = require("fs");
-const glob = require("glob");
-const TIMEOUT = process.env.TIMEOUT;
+const TIMEOUT = +process.env.TIMEOUT;
 
 module.exports = async (settings, workingDir) => {
   // Start process externally
   let child = spawnAutotune(settings, workingDir);
 
   // Kill process a few seconds before timeout expires
-  let processTimedOut = false;
-  let processTimeout = (TIMEOUT - 3) * 1000;
+  let processTimeout = (TIMEOUT - 4) * 1000;
   let timeoutHandle = setTimeout(() => {
-    processTimedOut = true;
     child.kill();
   }, processTimeout);
 
   return new Promise((resolve, reject) => {
     child.on("error", reject);
-    child.on("close", async exitCode => {
+    child.on("exit", async (exitCode, signal) => {
       clearTimeout(timeoutHandle);
-      if (processTimedOut) {
+      console.log("Autotune exited. Code:", exitCode, "Signal:", signal);
+      if (signal !== null) {
         reject(`
           [TIMEOUT] Sorry! Autotune jobs are capped after ${TIMEOUT} seconds.
           This request took longer and was aborted. Try decreasing the number of days.
+
+          Autotune logs:
+
+          ${readLogFile(workingDir)}
         `);
       } else if (exitCode === 0) {
         fs.copyFileSync(
@@ -30,7 +33,7 @@ module.exports = async (settings, workingDir) => {
           `${workingDir}/autotune/profile.json`,
           `${workingDir}/settings/profile.json`
         );
-        let recommendations = await readLogFile(workingDir);
+        let recommendations = readLogFile(workingDir);
         resolve(recommendations);
       } else reject("Autotune failed with exit code: " + exitCode);
     });
@@ -38,13 +41,8 @@ module.exports = async (settings, workingDir) => {
 };
 
 function readLogFile(workingDir) {
-  return new Promise((resolve, reject) => {
-    glob(`${workingDir}/autotune/autotune.*.log`, (err, files) => {
-      if (err) reject(err);
-      let fileContents = fs.readFileSync(files[0]);
-      resolve(fileContents);
-    });
-  });
+  let fileContents = fs.readFileSync(`${workingDir}/autotune-cloud.log`);
+  return fileContents;
 }
 
 function spawnAutotune(settings, workingDir) {
@@ -54,11 +52,14 @@ function spawnAutotune(settings, workingDir) {
     "--categorize-uam-as-basal=" + settings.categorizeUamAsBasal,
     "--start-days-ago=" + settings.startDaysAgo
   ];
+  let out = fs.openSync(`${workingDir}/autotune-cloud.log`, "a");
+  let err = fs.openSync(`${workingDir}/autotune-cloud.log`, "a");
   console.log("oref0-autotune", parameters.join(" "));
   return childProcess.spawn("oref0-autotune", parameters, {
     env: {
       TZ: settings.timezone
     },
-    detached: true
+    detached: false,
+    stdio: ["ignore", out, err]
   });
 }
