@@ -43,15 +43,17 @@ async function onJobScheduled(change, context) {
     });
 
   // Send log by email if user has an email address defined
+  let format = {weekday: 'long', month:'long', day:'numeric'};
+  let today = new Date()
   await firestore()
     .collection("mail")
     .add({
       toUids: [context.params.jobId],
       template: {
-        name: "daily-results",
+        name: "autotune-results",
         data: {
           output: error || response.data,
-          date: new Intl.DateTimeFormat("en-US", { dateStyle: "full" }).format(new Date()),
+          date: today.toLocaleDateString("en", format),
           nightscoutUpdated: !user.dryRun,
           name: user.name
         }
