@@ -41,6 +41,6 @@ You need to have 2 profiles in your Nightscout:
 If you have these profile, but they have different names, use the `profileNames` parameter to set them.
 
 ## Running every night, week, ...
-Iterative tuning is now in private bèta. Send me an email at niels@diabase.app if you'd like to join me in testing.  
+Iterative tuning is now in private bèta. Send me an email at hello@niels.me if you'd like to join me in testing.  
 If you know how to set up a cron job that triggers your customized API url at the interval you desire, you can already start using Autotune Cloud.  
 When Autotune Cloud has gone through sufficient testing, I will also open up a website where anyone can register, and configure Autotune to run for them every x days.
