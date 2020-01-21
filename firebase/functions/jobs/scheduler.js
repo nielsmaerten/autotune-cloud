@@ -27,6 +27,7 @@ async function scheduler(context) {
     // Get user data
     const user = users.docs[i];
     const userData = user.data();
+    userData.jobStarted = new Date();
 
     // Create a 'job' document to trigger Autotune
     batch.set(firestore().doc(`jobs/${user.id}`), userData);
