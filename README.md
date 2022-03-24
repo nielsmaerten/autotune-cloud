@@ -13,10 +13,20 @@ If you're running an OpenAPS rig, Autotune can automatically adjust your setting
 If you only want to run Autotune sporadically, I suggest checking out [Autotune Web](https://autotuneweb.azurewebsites.net/). But if you're interested in running Autotune every night/week/month/... then Autotune Cloud is for you.
 I'm currently testing Autotune Cloud privately. Every night at 1 AM, Autotune analyzes my Nightscout data of the past day. Then my pump is automatically updated with the tuned profile.
 
+## Deprecation notice
+This project is no longer maintained. 
+- After v2.8, AndroidAPS stopped accepting profile changes coming from Nightscout, making remotely updating/tuning the profile impractical.
+- The HTTPS API endpoint still exists and you can still use it if you want.
+  - If you want to tune on a schedule, you'll have to write your own cron job to trigger the endpoint at regular intervals.
+- AutotuneCloud has not been tested with the latest version of Nightscout
+  - Be very cautious before allowing it to update your profile on its own
+- If you want to set up this full project on your own, refer to [DEVELOPERS.md](./DEVELOPERS.md)
+- If you're interested in running Autotune with AndroidAPS, check out [this PR](https://github.com/nightscout/AndroidAPS/pull/34) by Philoul.
+
 ## HTTPS API
 Autotune Cloud has a publicly available API at:
 ```
-https://autotune-cloud.diabase.app/api/v2/run-autotune
+https://autotune.lab.glucocheck.app/api/v2/run-autotune
 ```
 You can run Autotune for yourself by visiting the URL above.  
 Configure Autotune by appending parameters to the URL like so:  
@@ -40,6 +50,12 @@ You need to have 2 profiles in your Nightscout:
 * a profile called "Backup Profile". Autotune will not deviate further than 20% from this profile, and it can be used as a fallback in case anything goes wrong.
 
 If you have these profile, but they have different names, use the `profileNames` parameter to set them.
+
+## A full example
+Calling the following url will perform a full Autotune run on https://cgm.herokuapp.com and return the results. It won't automatically change any profiles.
+```
+https://autotune.lab.glucocheck.app/api/v2/run-autotune?nsSite=https://cgm.herokuapp.com&nsSecret=xyz&min5mCarbImpact=8
+```
 
 ## Running every night, week, ...
 Iterative tuning is now in private bèta. Send me an email at hello@niels.me if you'd like to join me in testing.  
