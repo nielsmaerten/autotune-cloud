@@ -56,8 +56,3 @@ Calling the following url will perform a full Autotune run on https://cgm.heroku
 ```
 https://autotune.lab.glucocheck.app/api/v2/run-autotune?nsSite=https://cgm.herokuapp.com&nsSecret=xyz&min5mCarbImpact=8
 ```
-
-## Running every night, week, ...
-Iterative tuning is now in private bèta. Send me an email at hello@niels.me if you'd like to join me in testing.  
-If you know how to set up a cron job that triggers your customized API url at the interval you desire, you can already start using Autotune Cloud.  
-When Autotune Cloud has gone through sufficient testing, I will also open up a website where anyone can register, and configure Autotune to run for them every x days.
