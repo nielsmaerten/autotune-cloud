@@ -1,3 +1,14 @@
+# ⚠️ This project is deprecated:
+Autotune is coming to AndroidAPS as a native plugin 🎉.  
+
+The goal of this project was providing a way of tuning your basals daily, by running Autotune on an external server.
+As the official integration between AAPS and Autotune becomes available, Autotune Cloud's Public API will shut down.  
+
+The source code will remain available for anyone interested in setting up something like this themselves.  
+But if you're using AAPS, you'll find the native plugin is a lot easier to use :)
+
+--- 
+
 
 # Autotune Cloud
 Iteratively run Autotune for people using AndroidAPS and Loop  
